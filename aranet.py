@@ -8,16 +8,18 @@ import sys
 def main(argv):
     if len(argv) < 1 or "help" in argv or "?" in argv:
         print "Usage: python aranet.py DEVICE_ADDRESS [OPTIONS]"
+        print ""
         print "Options:"
-        print "  -n          Print current info only"
+        print "  -h          Fetch history"
         print "  -o <file>   Save history results to file"
+        print "  -w          Do not wait for sync before pulling history"
         print "  -l <count>  Get <count> last records"
         print "  -u <url>    Remote url for current value push"
         print ""
         return
 
-    wait = False if "-w" in argv else True
-    history = False if "-n" in argv else True
+    wait = "-w" not in argv
+    history = "-h" in argv
 
     output = ""
     url = ""
