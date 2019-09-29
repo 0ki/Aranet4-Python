@@ -16,6 +16,8 @@ def main(argv):
         print "  -l <count>  Get <count> last records"
         print "  -u <url>    Remote url for current value push"
         print ""
+        print "Using aranet4 library version %s" % aranet4.__version__
+        print ""
         return
 
     wait = "-w" not in argv
@@ -47,6 +49,8 @@ def main(argv):
         url = argv[idx]
 
     device_mac = argv[0]
+
+    print "Connecting to %s with library %s ..." % (device_mac, aranet4.__version__)
 
     ar4 = aranet4.Aranet4(device_mac)
 
