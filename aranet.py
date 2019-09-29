@@ -6,8 +6,8 @@ import datetime
 import sys
 
 def main(argv):
-    if len(argv) < 1 or "help" in argv or "?" in argv:
-        print "Usage: python aranet.py DEVICE_ADDRESS [OPTIONS]"
+    if "help" in argv or "?" in argv:
+        print "Usage: python aranet.py [DEVICE_ADDRESS] [OPTIONS]"
         print ""
         print "Options:"
         print "  -h          Fetch history"
@@ -16,7 +16,7 @@ def main(argv):
         print "  -l <count>  Get <count> last records"
         print "  -u <url>    Remote url for current value push"
         print ""
-        print "Using aranet4 library version %s" % aranet4.__version__
+        print "Using aranet4 library version %s by Andris Jargans and Kirils Solovjovs." % aranet4.__version__
         print ""
         return
 
@@ -48,11 +48,17 @@ def main(argv):
             return
         url = argv[idx]
 
-    device_mac = argv[0]
+    print "Library v%s. Connecting..." % (aranet4.__version__)
 
-    print "Connecting to %s with library %s ..." % (device_mac, aranet4.__version__)
+    if len(argv) and argv[0][0]!='-':
+        device_mac = argv[0]
+        ar4 = aranet4.Aranet4(device_mac)
+    else:
+        ar4 = aranet4.Aranet4()
+        device_mac = ar4.address
 
-    ar4 = aranet4.Aranet4(device_mac)
+    print "Successfully connected to %s." % device_mac
+    
 
     name = ar4.getName()
     ver = ar4.getVersion()

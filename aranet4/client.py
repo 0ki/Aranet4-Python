@@ -92,15 +92,53 @@ class Aranet4:
     AR4_SUBSCRIBE_HISTORY         = 0x0032
     AR4_NOTIFY_HISTORY            = 0x0031
 
-    def __init__(self, address):
-        if not re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", address.lower()):
-            raise Aranet4Error("Invalid device address")
 
-	self.address = address
-        self.device = btle.Peripheral(address, btle.ADDR_TYPE_RANDOM)
+    def __init__(self, *params):
+        self.address = None
+        if len(params):
+            address=params[0]
+            if not re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", address.lower()):
+                raise Aranet4Error("Invalid device address")
 
-        # This will not work. bluez returns up to 20 bytes per notification and rest of data is never received.
-        # self.device.setMTU(247)
+            self.device = btle.Peripheral(address, btle.ADDR_TYPE_RANDOM)
+            self.address = address
+        else:
+            candidates=self.findDevices()
+            if candidates == []:
+                 raise Aranet4Error("No paired Aranet4 device found")
+            for x in candidates:
+                print "WARN: Trying %s on %s..." % (x["name"], x["address"])
+                try:
+                    self.device = btle.Peripheral(x["address"], btle.ADDR_TYPE_RANDOM, iface=re.sub('[^0-9]','',x["adapter"]))
+                    self.address = x["address"]
+                except btle.BTLEDisconnectError:
+                    pass
+            if self.address == None:
+                raise Aranet4Error("Couldn't connect to any paired Aranet4 devices")
+
+
+    def findDevices(self):
+        import dbus
+
+        bus = dbus.SystemBus()
+        o = dbus.Interface(bus.get_object('org.bluez','/'),
+            'org.freedesktop.DBus.ObjectManager').GetManagedObjects()
+
+        aranets=[]
+        for dev in [p for p in o if any(x=="org.bluez.Device1" for x in o[p])]:
+
+            obj = dbus.Interface(bus.get_object('org.bluez',dev),
+            'org.freedesktop.DBus.Properties')
+
+            if self.AR4_SERVICE in obj.Get("org.bluez.Device1", "UUIDs") \
+                and obj.Get("org.bluez.Device1", "Paired"):
+                    aranets.append({
+                        "name": obj.Get("org.bluez.Device1", "Name"),
+                        "address": obj.Get("org.bluez.Device1", "Address"),
+                        "adapter": obj.Get("org.bluez.Device1", "Adapter"),
+                    })
+
+        return aranets
 
     def currentReadings(self, details=False):
         readings = {"temperature": -1, "humidity": -1, "pressure": -1, "co2": -1, "battery": -1, "ago": -1, "interval": -1}
