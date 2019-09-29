@@ -6,7 +6,7 @@ sudo sed -i 's#/bluetoothd$#/bluetoothd --experimental#' /lib/systemd/system/blu
 sudo systemctl daemon-reload
 sudo systemctl restart bluetooth
 ```
-1. Install bluepy:
+1. When your BLE stack is all set, install bluepy:
 ```
 sudo apt-get install python-pip
 sudo apt-get install libglib2.0-dev
@@ -50,7 +50,7 @@ Battery:      96 %
 ```
 
 ### History
-History file format: `Id;Date;Temperature;Humidity;Pressure,CO2`
+History file format: `Id;Date;Temperature;Humidity;Pressure;CO2`
 
 History file example:
 ```
