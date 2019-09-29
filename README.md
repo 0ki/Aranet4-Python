@@ -1,4 +1,4 @@
-# Aanet4 Python client
+# Aranet4 Python client
 ## Installation
 You will need a dongle/adapter that supports at least Bluetooth 4.0 or higher and host stack that supports BLE features. If you're using bluez, make sure that `bluetoothd` is running with `--experimental`. On systemd (*sigh*), try this:
 ```
@@ -11,6 +11,7 @@ sudo systemctl restart bluetooth
 sudo apt-get install python-pip
 sudo apt-get install libglib2.0-dev
 sudo pip2 install bluepy
+sudo pip2 install requests
 ```
 2. Pair device:
    1. Open bluetoothctl: `sudo bluetoothctl`
@@ -28,6 +29,22 @@ Options:
 -o <file>   Save history to file
 -l <count>  Get <count> last records
 -u <url>    Remote url for current value push
+```
+
+### Usage as library
+You can use this in your own project by adding aranet4 folder to your project and in main code just import it:
+```
+import aranet4
+
+device_mac = "00:00:00:00:00:00"
+
+ar4 = aranet4.Aranet4(device_mac)
+current = ar4.currentReadings()
+
+print "Temperature:", current["temperature"]
+print "Humidity:", current["humidity"]
+print "Pressure:", current["pressure"]
+print "CO2:", current["co2"]
 ```
 
 ## Examples
