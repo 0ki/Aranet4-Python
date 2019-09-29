@@ -1,17 +1,22 @@
 # Aanet4 Python client
 ## Installation
-1. Install bluepy:
+1. You will need a dongle/adapter that supports at least Bluetooth 4.0 or higher and host stack that supports BLE features. If you're using bluez, make sure that `bluetoothd` is running with `--experimental`. On systemd (*sigh*), try this:
+   1. `sudo sed -i 's#/bluetoothd$#/bluetoothd --experimental#' /lib/systemd/system/bluetooth.service`
+   1. `sudo systemctl daemon-reload`
+   1. `sudo systemctl restart bluetooth`
+2. Install bluepy:
 ```
 sudo apt-get install python-pip
 sudo apt-get install libglib2.0-dev
-sudo pip install bluepy
+sudo pip2 install bluepy
 ```
-2. Pair device:
+3. Pair device:
    1. Open bluetoothctl: `sudo bluetoothctl`
-   2. Scan devices: `scan on`
-   3. When found your device, stop scan: `scan off`
-   4. Pair device: `pair <DEVICE_ADDRESS>`
-   5. Exit from bluetooth ctl: `exit`
+   1. Enable passcode support: `agent KeyboardOnly`, then `default-agent`
+   1. Scan devices: `scan on`
+   1. When found your device, stop scan: `scan off`
+   1. Pair device: `pair <DEVICE_ADDRESS>`
+   1. Exit from bluetooth ctl: `exit`
 
 ## Usage
 Run script:  `python aranet.py <DEVCE_ADDRESS> [OPTIONS]`
