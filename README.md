@@ -15,10 +15,12 @@ sudo pip2 install requests
 ```
 2. Pair device:
    1. Open bluetoothctl: `sudo bluetoothctl`
-   1. Enable passcode support: `agent KeyboardOnly`, then `default-agent`
+   1. Enable passcode support: `agent KeyboardOnly`
+   1. Enable adapter: `power on`
    1. Scan devices: `scan on`
    1. When found your device, stop scan: `scan off`
    1. Pair device: `pair <DEVICE_ADDRESS>`
+   1. Disconnect if automatically connected: `disconnect <DEVICE_ADDRESS>`
    1. Exit from bluetooth ctl: `exit`
 
 ## Usage
