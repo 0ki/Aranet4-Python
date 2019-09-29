@@ -1,3 +1,4 @@
+#!/usr/bin/env python2.7
 import aranet4
 import requests
 import time
@@ -5,11 +6,7 @@ import datetime
 import sys
 
 def main(argv):
-    if len(argv) < 1:
-        print "Missing device address."
-        return
-
-    if "help" in argv or "?" in argv:
+    if len(argv) < 1 or "help" in argv or "?" in argv:
         print "Usage: python aranet.py DEVICE_ADDRESS [OPTIONS]"
         print "Options:"
         print "  -n          Print current info only"
@@ -138,6 +135,13 @@ def main(argv):
         f = False
         if output != "":
             f = open(output, "w")
+
+        csv ="Id;Date;Temperature;Humidity;Pressure;CO2"
+        if (f):
+            f.write(csv)
+            f.write("\n")
+        else:
+            print csv
 
         for i in range(start,end):
             finalIdx = readings - count + i
