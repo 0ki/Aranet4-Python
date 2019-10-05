@@ -1,19 +1,20 @@
 # Aranet4 Python client
 ## Installation
-You will need a dongle/adapter that supports at least Bluetooth 4.0 or higher and host stack that supports BLE features. If you're using bluez, make sure that `bluetoothd` is running with `--experimental`. On systemd (*sigh*), try this:
+You will need a dongle/adapter that supports at least Bluetooth 4.0 or higher and host stack that supports BLE features.
+1. Install BLE stack and bluepy:
+```
+sudo apt-get update
+sudo apt-get install libgtk2.0-dev libglib2.0-dev build-essential bluez
+sudo pip2 install bluepy
+sudo pip2 install requests
+```
+2. Make sure that `bluetoothd` is running with `--experimental`. On systemd (*sigh*), try this:
 ```
 sudo sed -i 's#/bluetoothd$#/bluetoothd --experimental#' /lib/systemd/system/bluetooth.service
 sudo systemctl daemon-reload
 sudo systemctl restart bluetooth
 ```
-1. When your BLE stack is all set, install bluepy:
-```
-sudo apt-get install python-pip
-sudo apt-get install libglib2.0-dev
-sudo pip2 install bluepy
-sudo pip2 install requests
-```
-2. Pair device:
+3. Pair device:
    1. Open bluetoothctl: `sudo bluetoothctl`
    1. Enable passcode support: `agent KeyboardOnly`
    1. Enable adapter: `power on`
